@@ -125,19 +125,14 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><strong>什么是Druid？</strong></p>
-<blockquote>
-<p><left>Druid是阿里出的JDBC组件库,包括数据库连接池、SQL Parser等组件。</left></p>
-<p><left>Druid的Github地址是 <a href="https://github.com/alibaba/druid" target="_blank" rel="noopener">https://github.com/alibaba/druid</a></left></p>
-</blockquote>
+<p>Druid是阿里出的JDBC组件库,包括数据库连接池、SQL Parser等组件。<br>Druid的Github地址是 <a href="https://github.com/alibaba/druid" target="_blank" rel="noopener">https://github.com/alibaba/druid</a></p>
 <hr>
 <p><strong>使用Druid完成多数据源访问需要以下步骤</strong></p>
-<blockquote>
 <ul>
-<li><left>项目中添加Druid</left></li>
-<li><left>application.yml的配置</left></li>
-<li><left>DataSource、DataSourceTransactionManager、SqlSessionFactory以及SqlSessionTemplate的配置</left></li>
+<li>项目中添加Druid</li>
+<li>application.yml的配置</li>
+<li>DataSource、DataSourceTransactionManager、SqlSessionFactory以及SqlSessionTemplate的配置</li>
 </ul>
-</blockquote>
 <hr>
 <p><em>本文使用的工具是IDEA，使用maven作为项目管理工具,使用sqlserver数据库</em></p>
 <h3 id="在项目中添加Druid的依赖"><a href="#在项目中添加Druid的依赖" class="headerlink" title="在项目中添加Druid的依赖"></a>在项目中添加Druid的依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/com.alibaba/druid --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>druid<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
