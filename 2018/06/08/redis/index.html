@@ -7,18 +7,18 @@
   
   <title>redis 初识 | 雨季的Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="简介 Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。 Redis 支持的键值数据类型有：  字符串类型 ( string ) 散列类型 ( hash ) 列表类型 ( list ) 集合类型 ( set ) 有序集合类型 (">
+  <meta name="description" content="简介Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。 Redis 支持的键值数据类型有：  字符串类型 ( string ) 散列类型 ( hash ) 列表类型 ( list ) 集合类型 ( set ) 有序集合类型 (">
 <meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis 初识">
 <meta property="og:url" content="http://ukipoi.github.io/2018/06/08/redis/index.html">
 <meta property="og:site_name" content="雨季的Blog">
-<meta property="og:description" content="简介 Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。 Redis 支持的键值数据类型有：  字符串类型 ( string ) 散列类型 ( hash ) 列表类型 ( list ) 集合类型 ( set ) 有序集合类型 (">
+<meta property="og:description" content="简介Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。 Redis 支持的键值数据类型有：  字符串类型 ( string ) 散列类型 ( hash ) 列表类型 ( list ) 集合类型 ( set ) 有序集合类型 (">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-08T06:27:39.057Z">
+<meta property="og:updated_time" content="2018-06-08T06:29:59.234Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis 初识">
-<meta name="twitter:description" content="简介 Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。 Redis 支持的键值数据类型有：  字符串类型 ( string ) 散列类型 ( hash ) 列表类型 ( list ) 集合类型 ( set ) 有序集合类型 (">
+<meta name="twitter:description" content="简介Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。 Redis 支持的键值数据类型有：  字符串类型 ( string ) 散列类型 ( hash ) 列表类型 ( list ) 集合类型 ( set ) 有序集合类型 (">
   
     <link rel="alternate" href="/atom.xml" title="雨季的Blog" type="application/atom+xml">
   
@@ -87,8 +87,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><blockquote>
-<p>Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。</p>
+        <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。</p>
 <p>Redis 支持的键值数据类型有：</p>
 <ul>
 <li>字符串类型 ( string )</li>
@@ -97,7 +96,6 @@
 <li>集合类型 ( set )</li>
 <li>有序集合类型 ( zset )</li>
 </ul>
-</blockquote>
 <h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h4><ul>
 <li>持久化</li>
 <li>事物</li>
