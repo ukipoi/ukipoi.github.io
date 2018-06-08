@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>java反射的基本使用 | 雨季的部落格</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="之前在项目中遇到了一个把 List 输出称 HTML 的 Table 的需求，虽然最后没有采用，不过正好记录一下自己的学习内容。 其实如果 List 传入的类是固定的话，可以很简单的实现。不过我想写一个接口，传入 Template 类的形式，这样不管传入的是什么实体类，都可以输出成 HTML 表格的形式了。 不过以接口的形式呈现，就需要通过反射获取传入实体类的属性，因为不知道会传入哪些类，这些类有">
+<meta name="keywords" content="java,reflect">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java反射的基本使用">
+<meta property="og:url" content="http://ukipoi.github.io/2018/06/08/reflect/index.html">
+<meta property="og:site_name" content="雨季的部落格">
+<meta property="og:description" content="之前在项目中遇到了一个把 List 输出称 HTML 的 Table 的需求，虽然最后没有采用，不过正好记录一下自己的学习内容。 其实如果 List 传入的类是固定的话，可以很简单的实现。不过我想写一个接口，传入 Template 类的形式，这样不管传入的是什么实体类，都可以输出成 HTML 表格的形式了。 不过以接口的形式呈现，就需要通过反射获取传入实体类的属性，因为不知道会传入哪些类，这些类有">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-08T08:17:04.378Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java反射的基本使用">
+<meta name="twitter:description" content="之前在项目中遇到了一个把 List 输出称 HTML 的 Table 的需求，虽然最后没有采用，不过正好记录一下自己的学习内容。 其实如果 List 传入的类是固定的话，可以很简单的实现。不过我想写一个接口，传入 Template 类的形式，这样不管传入的是什么实体类，都可以输出成 HTML 表格的形式了。 不过以接口的形式呈现，就需要通过反射获取传入实体类的属性，因为不知道会传入哪些类，这些类有">
+  
+    <link rel="alternate" href="/atom.xml" title="雨季的部落格" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">雨季的部落格</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://ukipoi.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-reflect" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/08/reflect/" class="article-date">
+  <time datetime="2018-06-08T07:45:48.000Z" itemprop="datePublished">2018-06-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      java反射的基本使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前在项目中遇到了一个把 List 输出称 HTML 的 Table 的需求，虽然最后没有采用，不过正好记录一下自己的学习内容。</p>
+<p>其实如果 List 传入的类是固定的话，可以很简单的实现。不过我想写一个接口，传入 Template 类的形式，这样不管传入的是什么实体类，都可以输出成 HTML 表格的形式了。</p>
+<p>不过以接口的形式呈现，就需要通过反射获取传入实体类的属性，因为不知道会传入哪些类，这些类有哪些属性。</p>
+<p>完成这个接口的方式是调用这个方法时，传入 List 和 实体类的类名。就像这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printClass</span><span class="params">(List&lt;T&gt; list,String className)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>然后主要使用 Field.getName() 的方法获取属性名和 Field.get(class) 内容值.</p>
+<p>下面是接口实现类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">printClass</span><span class="params">(List&lt;T&gt; list,String className)</span></span>&#123;</span><br><span class="line">    String htmlstr=<span class="string">""</span>;</span><br><span class="line">    Object object = Class.forName(className).newInstance();</span><br><span class="line">    Class c = object.getClass();</span><br><span class="line">    Field[] fields = c.getDeclaredFields(); <span class="comment">//获取T类的所有属性</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(Field field:fields)&#123;</span><br><span class="line">        field.setAccessible(<span class="keyword">true</span>);  <span class="comment">//暴力的解除了私有限定</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//html字符串拼接，并且把实体类的属性名作为表头</span></span><br><span class="line">    htmlstr += <span class="string">"&lt;table&gt;&lt;tr&gt;"</span>;</span><br><span class="line">    <span class="keyword">for</span> (Field field : fields) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            htmlstr += <span class="string">"&lt;th&gt;"</span> + field.getName() + <span class="string">"&lt;/th&gt;"</span>; <span class="comment">//获取属性名</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    htmlstr+=<span class="string">"&lt;/tr&gt;"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取实体类的属性值并作为表内容</span></span><br><span class="line">    <span class="keyword">for</span> (T t : list) &#123;</span><br><span class="line">        htmlstr += <span class="string">"&lt;tr&gt;"</span>;</span><br><span class="line">        <span class="keyword">for</span> (Field field : fields) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                htmlstr += <span class="string">"&lt;td&gt;"</span> + field.get(t) + <span class="string">"&lt;/td&gt;"</span>; <span class="comment">//获取类t当前field（属性名）的属性值</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        htmlstr += <span class="string">"&lt;/tr&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    htmlstr += <span class="string">"&lt;/table&gt;"</span>; <span class="comment">//有头有尾</span></span><br><span class="line">    <span class="keyword">return</span> htmlstr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://ukipoi.github.io/2018/06/08/reflect/" data-id="cji5p6x2x0001w8q33xt738pi" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reflect/">reflect</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/06/08/redis/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Redis 初识</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Druid/">Druid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/">Redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/reflect/">reflect</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Druid/" style="font-size: 10px;">Druid</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/reflect/" style="font-size: 10px;">reflect</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/06/08/reflect/">java反射的基本使用</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/08/redis/">Redis 初识</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/08/note/">杂记</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/07/druid/">Spring boot下使用Druid完成多数据源访问简单配置</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/07/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 ukipoi<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
