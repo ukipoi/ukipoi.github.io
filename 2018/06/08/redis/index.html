@@ -5,19 +5,20 @@
   
 
   
-  <title>杂记 | 雨季的Blog</title>
+  <title>redis 初识 | 雨季的Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="对自己的技术博客提一个要求，使用一个新的技术的时候。先把这个技术拥有的能力说明一边。写上它的基本介绍，可以办到功能。然后在了解清楚这门技术后可以把构架，以及这门技术的原理写出。 希望自己可以按这个要求做到把。 之前面试的时候被问过Maven掌握的怎么样，结果发现自己了解的仅仅是最基础的使用而已。Maven有哪些功能？可以做到什么？你选择这个Maven的原因是什么？他和其他的项目管理工具有哪些优劣？">
+  <meta name="description" content="简介 Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。 Redis 支持的键值数据类型有：  字符串类型 ( string ) 散列类型 ( hash ) 列表类型 ( list ) 集合类型 ( set ) 有序集合类型 (">
+<meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="杂记">
-<meta property="og:url" content="http://ukipoi.github.io/2018/06/08/note/index.html">
+<meta property="og:title" content="redis 初识">
+<meta property="og:url" content="http://ukipoi.github.io/2018/06/08/redis/index.html">
 <meta property="og:site_name" content="雨季的Blog">
-<meta property="og:description" content="对自己的技术博客提一个要求，使用一个新的技术的时候。先把这个技术拥有的能力说明一边。写上它的基本介绍，可以办到功能。然后在了解清楚这门技术后可以把构架，以及这门技术的原理写出。 希望自己可以按这个要求做到把。 之前面试的时候被问过Maven掌握的怎么样，结果发现自己了解的仅仅是最基础的使用而已。Maven有哪些功能？可以做到什么？你选择这个Maven的原因是什么？他和其他的项目管理工具有哪些优劣？">
+<meta property="og:description" content="简介 Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。 Redis 支持的键值数据类型有：  字符串类型 ( string ) 散列类型 ( hash ) 列表类型 ( list ) 集合类型 ( set ) 有序集合类型 (">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-08T02:46:38.650Z">
+<meta property="og:updated_time" content="2018-06-08T06:27:39.057Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="杂记">
-<meta name="twitter:description" content="对自己的技术博客提一个要求，使用一个新的技术的时候。先把这个技术拥有的能力说明一边。写上它的基本介绍，可以办到功能。然后在了解清楚这门技术后可以把构架，以及这门技术的原理写出。 希望自己可以按这个要求做到把。 之前面试的时候被问过Maven掌握的怎么样，结果发现自己了解的仅仅是最基础的使用而已。Maven有哪些功能？可以做到什么？你选择这个Maven的原因是什么？他和其他的项目管理工具有哪些优劣？">
+<meta name="twitter:title" content="redis 初识">
+<meta name="twitter:description" content="简介 Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。 Redis 支持的键值数据类型有：  字符串类型 ( string ) 散列类型 ( hash ) 列表类型 ( list ) 集合类型 ( set ) 有序集合类型 (">
   
     <link rel="alternate" href="/atom.xml" title="雨季的Blog" type="application/atom+xml">
   
@@ -64,10 +65,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-note" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-redis" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2018/06/08/note/" class="article-date">
-  <time datetime="2018-06-08T00:57:05.000Z" itemprop="datePublished">2018-06-08</time>
+    <a href="/2018/06/08/redis/" class="article-date">
+  <time datetime="2018-06-08T05:17:31.000Z" itemprop="datePublished">2018-06-08</time>
 </a>
     
   </div>
@@ -78,7 +79,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      杂记
+      redis 初识
     </h1>
   
 
@@ -86,36 +87,48 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>对自己的技术博客提一个要求，使用一个新的技术的时候。先把这个技术拥有的能力说明一边。写上它的基本介绍，可以办到功能。然后在了解清楚这门技术后可以把构架，以及这门技术的原理写出。</p>
-<p>希望自己可以按这个要求做到把。</p>
-<p>之前面试的时候被问过Maven掌握的怎么样，结果发现自己了解的仅仅是最基础的使用而已。Maven有哪些功能？可以做到什么？你选择这个Maven的原因是什么？他和其他的项目管理工具有哪些优劣？这些都是我之前没有了解过的。</p>
-<p>所以决定在每次接触到新技术的时候，先去了解这门技术可以办到的功能，之后才取了解具体怎么使用它。</p>
+        <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><blockquote>
+<p>Redis 是 Remote Dictionary Server ( 远程数据服务 ) 的缩写，是一个开源的高性能键值对 ( key-value ) 数据库。它以字典结构存储数据，并允许其他应用通过TCP协议读取字典内容。</p>
+<p>Redis 支持的键值数据类型有：</p>
+<ul>
+<li>字符串类型 ( string )</li>
+<li>散列类型 ( hash )</li>
+<li>列表类型 ( list )</li>
+<li>集合类型 ( set )</li>
+<li>有序集合类型 ( zset )</li>
+</ul>
+</blockquote>
+<h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h4><ul>
+<li>持久化</li>
+<li>事物</li>
+<li>设置生存时间</li>
+<li>排序</li>
+<li>消息通知</li>
+<li>集群</li>
+</ul>
+<h4 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h4><ul>
+<li>缓存</li>
+<li>数据库</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://ukipoi.github.io/2018/06/08/note/" data-id="cji5la81v0008a0q3d2xsbj6c" class="article-share-link">Share</a>
+      <a data-url="http://ukipoi.github.io/2018/06/08/redis/" data-id="cji5la8080000a0q3egappihj" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
+
     </footer>
   </div>
   
     
 <nav id="article-nav">
   
-    <a href="/2018/06/08/redis/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          redis 初识
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/06/07/druid/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2018/06/08/note/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Spring boot下使用Druid完成多数据源访问简单配置</div>
+      <div class="article-nav-title">杂记</div>
     </a>
   
 </nav>
