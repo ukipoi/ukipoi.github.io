@@ -65,6 +65,91 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-HTTP访问控制（CROS）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/26/HTTP访问控制（CROS）/" class="article-date">
+  <time datetime="2019-06-25T16:00:00.000Z" itemprop="datePublished">2019-06-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/26/HTTP访问控制（CROS）/">拦截器的错误配置导致前端正常请求被拦截重定向</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>原本的标题是“HTTP访问控制（CROS） 初识”，但是我发现写的内容其实就是<a href="https://developer.mozilla.org/zh-CN/docs/Web" target="_blank" rel="noopener">mozilla开发文档</a>里关于CROS里的内容。所以我想我应该记下自己为什么去了解关于CROS的内容。</p>
+<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>前端写的一个普通的Post请求，他和我说请求返回302了。我感到很奇怪，我自己用Postman调试都已经通过了，应该是没有问题的。随后前端和我说访问该模块的所有类型 <code>content type</code> 是 <code>application/json</code> 的Post请求都会被302重定向。我怀疑可能是被拦截器拦截了。</p>
+<p>在拦截器里打印了下log，发现确实是被拦截器拦截了，原因是请求没有Session信息，而且这些请求都是<code>OPTIONS</code>的方法。就去了解了到了这是和HTTP里CROS相关的内容。</p>
+<h2 id="HTTP请求的OPTIONS方法"><a href="#HTTP请求的OPTIONS方法" class="headerlink" title="HTTP请求的OPTIONS方法"></a>HTTP请求的OPTIONS方法</h2><p>在HTTP中所有的复杂请求，游览器都会发送一个预检请求到服务器，以获知服务器是否允许该实际请求（Postman中并不会发送预检请求所以没有被服务器拦截）。所以就算前端没有存在跨域，但是请求还是会被后台拦截并被重定向了。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>在拦截器中对拦截的方法进行判断，对于一些不需要进行拦截的请求直接返回true。</p>
+<hr>
+<h2 id="CROS是什么"><a href="#CROS是什么" class="headerlink" title="CROS是什么"></a>CROS是什么</h2><p>跨域资源共享(CORS) 是一种机制，它使用额外的 HTTP 头来告诉浏览器  让运行在一个 origin (domain) 上的Web应用被准许访问来自不同源服务器上的指定的资源。当一个资源从与该资源本身所在的服务器不同的域、协议或端口请求一个资源时，资源会发起一个跨域 HTTP 请求。</p>
+<h2 id="什么时候会进行CROS"><a href="#什么时候会进行CROS" class="headerlink" title="什么时候会进行CROS"></a>什么时候会进行CROS</h2><ul>
+<li>由 XMLHttpRequest 或 Fetch 发起的跨域 HTTP 请求</li>
+<li>Web 字体 (CSS 中通过 @font-face 使用跨域字体资源)</li>
+<li>WebGL 贴图</li>
+<li>使用 drawImage 将 Images/video 画面绘制到 canvas</li>
+<li>样式表（使用 CSSOM）</li>
+</ul>
+<blockquote>
+<p>XHR ( XMLHttpRequest ) 是一个对象，可以和服务器交互。在 Ajax 中被大量使用。Fetch是ES6中的一个新内容。</p>
+</blockquote>
+<h2 id="哪些请求需要发送预检请求"><a href="#哪些请求需要发送预检请求" class="headerlink" title="哪些请求需要发送预检请求"></a>哪些请求需要发送预检请求</h2><p>当请求满足下述任一条件时，即应首先发送预检请求：</p>
+<ul>
+<li>使用了下面任一 HTTP 方法：<ul>
+<li>PUT</li>
+<li>DELETE</li>
+<li>CONNECT</li>
+<li>OPTIONS</li>
+<li>TRACE</li>
+<li>PATCH</li>
+</ul>
+</li>
+<li>人为设置了对 CORS 安全的首部字段集合之外的其他首部字段。该集合为：<ul>
+<li>Accept</li>
+<li>Accept-Language</li>
+<li>Content-Language</li>
+<li>Content-Type (需要注意额外的限制)</li>
+<li>DPR</li>
+<li>Downlink</li>
+<li>Save-Data</li>
+<li>Viewport-Width</li>
+<li>Width</li>
+</ul>
+</li>
+<li>Content-Type 的值不属于下列之一:<ul>
+<li>application/x-www-form-urlencoded</li>
+<li>multipart/form-data</li>
+<li>text/plain</li>
+</ul>
+</li>
+<li>请求中的XMLHttpRequestUpload 对象注册了任意多个事件监听器。</li>
+<li>请求中使用了ReadableStream对象。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.ukipoi.com/2019/06/26/HTTP访问控制（CROS）/" data-id="cjxeexg9s000018czxeyrjm4a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-LeetCode My collect 1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/06/13/LeetCode My collect 1/" class="article-date">
@@ -115,7 +200,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://www.ukipoi.com/2019/06/13/LeetCode My collect 1/" data-id="cjxbndx8500011cczi17nvx7q" class="article-share-link">Share</a>
+      <a data-url="https://www.ukipoi.com/2019/06/13/LeetCode My collect 1/" data-id="cjxeexgae000118cz97u9kodv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -154,6 +239,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/06/26/HTTP访问控制（CROS）/">拦截器的错误配置导致前端正常请求被拦截重定向</a>
+          </li>
         
           <li>
             <a href="/2019/06/13/LeetCode My collect 1/">LeetCode-NO.15 三数之和</a>

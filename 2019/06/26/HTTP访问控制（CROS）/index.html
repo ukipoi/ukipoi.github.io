@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>拦截器的错误配置导致前端正常请求被拦截重定向 | 雨季的部落格</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="写在前面原本的标题是“HTTP访问控制（CROS） 初识”，但是我发现写的内容其实就是mozilla开发文档里关于CROS里的内容。所以我想我应该记下自己为什么去了解关于CROS的内容。 起因前端写的一个普通的Post请求，他和我说请求返回302了。我感到很奇怪，我自己用Postman调试都已经通过了，应该是没有问题的。随后前端和我说访问该模块的所有类型 content type 是 applic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拦截器的错误配置导致前端正常请求被拦截重定向">
+<meta property="og:url" content="https://www.ukipoi.com/2019/06/26/HTTP访问控制（CROS）/index.html">
+<meta property="og:site_name" content="雨季的部落格">
+<meta property="og:description" content="写在前面原本的标题是“HTTP访问控制（CROS） 初识”，但是我发现写的内容其实就是mozilla开发文档里关于CROS里的内容。所以我想我应该记下自己为什么去了解关于CROS的内容。 起因前端写的一个普通的Post请求，他和我说请求返回302了。我感到很奇怪，我自己用Postman调试都已经通过了，应该是没有问题的。随后前端和我说访问该模块的所有类型 content type 是 applic">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-06-27T08:35:24.385Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拦截器的错误配置导致前端正常请求被拦截重定向">
+<meta name="twitter:description" content="写在前面原本的标题是“HTTP访问控制（CROS） 初识”，但是我发现写的内容其实就是mozilla开发文档里关于CROS里的内容。所以我想我应该记下自己为什么去了解关于CROS的内容。 起因前端写的一个普通的Post请求，他和我说请求返回302了。我感到很奇怪，我自己用Postman调试都已经通过了，应该是没有问题的。随后前端和我说访问该模块的所有类型 content type 是 applic">
+  
+    <link rel="alternate" href="/atom.xml" title="雨季的部落格" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">雨季的部落格</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://www.ukipoi.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-HTTP访问控制（CROS）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/26/HTTP访问控制（CROS）/" class="article-date">
+  <time datetime="2019-06-25T16:00:00.000Z" itemprop="datePublished">2019-06-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      拦截器的错误配置导致前端正常请求被拦截重定向
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>原本的标题是“HTTP访问控制（CROS） 初识”，但是我发现写的内容其实就是<a href="https://developer.mozilla.org/zh-CN/docs/Web" target="_blank" rel="noopener">mozilla开发文档</a>里关于CROS里的内容。所以我想我应该记下自己为什么去了解关于CROS的内容。</p>
+<h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>前端写的一个普通的Post请求，他和我说请求返回302了。我感到很奇怪，我自己用Postman调试都已经通过了，应该是没有问题的。随后前端和我说访问该模块的所有类型 <code>content type</code> 是 <code>application/json</code> 的Post请求都会被302重定向。我怀疑可能是被拦截器拦截了。</p>
+<p>在拦截器里打印了下log，发现确实是被拦截器拦截了，原因是请求没有Session信息，而且这些请求都是<code>OPTIONS</code>的方法。就去了解了到了这是和HTTP里CROS相关的内容。</p>
+<h2 id="HTTP请求的OPTIONS方法"><a href="#HTTP请求的OPTIONS方法" class="headerlink" title="HTTP请求的OPTIONS方法"></a>HTTP请求的OPTIONS方法</h2><p>在HTTP中所有的复杂请求，游览器都会发送一个预检请求到服务器，以获知服务器是否允许该实际请求（Postman中并不会发送预检请求所以没有被服务器拦截）。所以就算前端没有存在跨域，但是请求还是会被后台拦截并被重定向了。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>在拦截器中对拦截的方法进行判断，对于一些不需要进行拦截的请求直接返回true。</p>
+<hr>
+<h2 id="CROS是什么"><a href="#CROS是什么" class="headerlink" title="CROS是什么"></a>CROS是什么</h2><p>跨域资源共享(CORS) 是一种机制，它使用额外的 HTTP 头来告诉浏览器  让运行在一个 origin (domain) 上的Web应用被准许访问来自不同源服务器上的指定的资源。当一个资源从与该资源本身所在的服务器不同的域、协议或端口请求一个资源时，资源会发起一个跨域 HTTP 请求。</p>
+<h2 id="什么时候会进行CROS"><a href="#什么时候会进行CROS" class="headerlink" title="什么时候会进行CROS"></a>什么时候会进行CROS</h2><ul>
+<li>由 XMLHttpRequest 或 Fetch 发起的跨域 HTTP 请求</li>
+<li>Web 字体 (CSS 中通过 @font-face 使用跨域字体资源)</li>
+<li>WebGL 贴图</li>
+<li>使用 drawImage 将 Images/video 画面绘制到 canvas</li>
+<li>样式表（使用 CSSOM）</li>
+</ul>
+<blockquote>
+<p>XHR ( XMLHttpRequest ) 是一个对象，可以和服务器交互。在 Ajax 中被大量使用。Fetch是ES6中的一个新内容。</p>
+</blockquote>
+<h2 id="哪些请求需要发送预检请求"><a href="#哪些请求需要发送预检请求" class="headerlink" title="哪些请求需要发送预检请求"></a>哪些请求需要发送预检请求</h2><p>当请求满足下述任一条件时，即应首先发送预检请求：</p>
+<ul>
+<li>使用了下面任一 HTTP 方法：<ul>
+<li>PUT</li>
+<li>DELETE</li>
+<li>CONNECT</li>
+<li>OPTIONS</li>
+<li>TRACE</li>
+<li>PATCH</li>
+</ul>
+</li>
+<li>人为设置了对 CORS 安全的首部字段集合之外的其他首部字段。该集合为：<ul>
+<li>Accept</li>
+<li>Accept-Language</li>
+<li>Content-Language</li>
+<li>Content-Type (需要注意额外的限制)</li>
+<li>DPR</li>
+<li>Downlink</li>
+<li>Save-Data</li>
+<li>Viewport-Width</li>
+<li>Width</li>
+</ul>
+</li>
+<li>Content-Type 的值不属于下列之一:<ul>
+<li>application/x-www-form-urlencoded</li>
+<li>multipart/form-data</li>
+<li>text/plain</li>
+</ul>
+</li>
+<li>请求中的XMLHttpRequestUpload 对象注册了任意多个事件监听器。</li>
+<li>请求中使用了ReadableStream对象。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://www.ukipoi.com/2019/06/26/HTTP访问控制（CROS）/" data-id="cjxeexg9s000018czxeyrjm4a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/06/13/LeetCode My collect 1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">LeetCode-NO.15 三数之和</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/06/26/HTTP访问控制（CROS）/">拦截器的错误配置导致前端正常请求被拦截重定向</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/13/LeetCode My collect 1/">LeetCode-NO.15 三数之和</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Ameya Uki<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
